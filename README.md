@@ -1,4 +1,4 @@
-# aws_codedeploy_using_github
+# postgresql master slave replication docker-compose file 
 
 
 ## docker-compose.yml
