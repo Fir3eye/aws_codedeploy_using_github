@@ -79,10 +79,20 @@ SELECT * FROM test_table;
 
 ## 1. Connect to PostgreSQL Server
 ```
-docker exec -it master_db psql -U master_user my_db
+docker exec -it slave_db psql -U slave_user
+
+# check subscription setup
+SELECT * FROM pg_stat_subscription;
+
 ```
 
 ## show db
 ```
 \l
 ```
+
+## Create Subscription for replication 
+CREATE SUBSCRIPTION my_subscription
+  CONNECTION 'dbname=my_db host=master_db user=slave_user password=slave_password'
+  PUBLICATION my_publication;
+
