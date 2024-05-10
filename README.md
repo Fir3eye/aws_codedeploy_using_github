@@ -36,3 +36,53 @@ services:
 
 
 ```
+# Check master_slave
+
+ ## 1. Connect to PostgreSQL Server
+```
+docker exec -it master_db psql -U master_user my_db
+```
+
+## Check schema and table 
+
+```
+\c my_db
+\d test_table
+```
+
+## Verfiy Database Existence
+
+```
+\l
+```
+## connect to mydatabase
+
+```
+\c my_db
+
+```
+## List table
+
+```
+#show table
+\dt
+
+# chec schema of table
+\d test_table
+
+#show the table data
+SELECT * FROM test_table;
+
+```
+
+# slave_server
+
+## 1. Connect to PostgreSQL Server
+```
+docker exec -it master_db psql -U master_user my_db
+```
+
+## show db
+```
+\l
+```
