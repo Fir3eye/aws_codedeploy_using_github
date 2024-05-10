@@ -80,44 +80,6 @@ networks:
 \d my_table  -- Describe the structure of the my_table
 
 ```
-# Check master_slave
-
- ## 1. Connect to PostgreSQL Server
-```
-docker exec -it master_db psql -U master_user my_db
-```
-
-## Check schema and table 
-
-```
-\c my_db
-\d test_table
-```
-
-## Verfiy Database Existence
-
-```
-\l
-```
-## connect to mydatabase
-
-```
-\c my_db
-
-```
-## List table
-
-```
-#show table
-\dt
-
-# chec schema of table
-\d test_table
-
-#show the table data
-SELECT * FROM test_table;
-
-```
 
 # slave_server
 
@@ -127,16 +89,33 @@ docker exec -it slave_db psql -U slave_user
 
 # check subscription setup
 SELECT * FROM pg_stat_subscription;
-
 ```
 
-## show db
-```
-\l
-```
+# Master Server
+--------------------------------------------------------------
+## Insert Dummy data on master_slave
 
-## Create Subscription for replication 
-CREATE SUBSCRIPTION my_subscription
-  CONNECTION 'dbname=my_db host=master_db user=slave_user password=slave_password'
-  PUBLICATION my_publication;
+```
+# connect postgresql data
+
+docker exec -it master_db psql -U master_user -d my_db
+
+# create table
+CREATE TABLE my_table (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    age INT
+);
+
+# insert data
+INSERT INTO my_table (name, email, age) VALUES
+    ('John Doe', 'john@example.com', 30),
+    ('Jane Smith', 'jane@example.com', 25),
+    ('Alice Johnson', 'alice@example.com', 35);
+
+# Verify data
+SELECT * FROM my_table;
+
+```
 
