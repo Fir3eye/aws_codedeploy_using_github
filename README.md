@@ -19,13 +19,6 @@ services:
     volumes:
       - ./postgres_config/master_postgres.conf:/etc/postgresql/postgresql.conf
       - ./postgres_config/master_pg_hba.conf:/etc/postgresql/pg_hba.conf
-    networks:
-      - db_network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U master_user"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   slave_postgres:
     image: postgres:latest
@@ -40,14 +33,6 @@ services:
     volumes:
       - ./postgres_config/slave_postgres.conf:/etc/postgresql/postgresql.conf
       - ./postgres_config/slave_pg_hba.conf:/etc/postgresql/pg_hba.conf
-    networks:
-      - db_network
-    command: ["postgres", "-c", "wal_level=replica", "-c", "max_wal_senders=3", "-c", "wal_keep_segments=8"]
-
-networks:
-  db_network:
-    driver: bridge
-
 
 
 ```
@@ -85,6 +70,14 @@ networks:
   db_network:
     driver: bridge
 
+
+```
+## psql command 
+```
+\l  -- List all databases
+\c my_db  -- Connect to the my_db database
+\dt  -- List all tables in the current database (my_db)
+\d my_table  -- Describe the structure of the my_table
 
 ```
 # Check master_slave
