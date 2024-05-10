@@ -19,6 +19,13 @@ services:
     volumes:
       - ./postgres_config/master_postgres.conf:/etc/postgresql/postgresql.conf
       - ./postgres_config/master_pg_hba.conf:/etc/postgresql/pg_hba.conf
+    networks:
+      - db_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U master_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   slave_postgres:
     image: postgres:latest
@@ -33,6 +40,50 @@ services:
     volumes:
       - ./postgres_config/slave_postgres.conf:/etc/postgresql/postgresql.conf
       - ./postgres_config/slave_pg_hba.conf:/etc/postgresql/pg_hba.conf
+    networks:
+      - db_network
+    command: ["postgres", "-c", "wal_level=replica", "-c", "max_wal_senders=3", "-c", "wal_keep_segments=8"]
+
+networks:
+  db_network:
+    driver: bridge
+
+
+
+```
+
+## new composefile 
+
+```
+version: '3'
+
+services:
+  db_master:
+    image: postgres:latest
+    container_name: master_db
+    environment:
+      POSTGRES_PASSWORD: your_master_password
+      POSTGRES_DB: your_database_name
+    ports:
+      - "5432:5432"
+    networks:
+      - db_network
+
+  db_slave:
+    image: postgres:latest
+    container_name: slave_db
+    environment:
+      POSTGRES_PASSWORD: your_slave_password
+      POSTGRES_DB: your_database_name
+    depends_on:
+      - db_master
+    networks:
+      - db_network
+    command: ["postgres", "-c", "wal_level=logical", "-c", "max_replication_slots=2"]
+
+networks:
+  db_network:
+    driver: bridge
 
 
 ```
